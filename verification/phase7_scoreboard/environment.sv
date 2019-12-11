@@ -94,7 +94,11 @@ class environment;
     wait(mon[2].no_transactions == gen.repeat_count/4);
     wait(mon[3].no_transactions == gen.repeat_count/4);
     $display("%0d : Monitor Packets: %d", $time, gen.repeat_count);
-    
+
+    // need sum() since its an array
+    wait(scb.no_transactions.sum() + scb.scb_errors.sum() == gen.repeat_count);
+    $display("%0d : Scoreboard Packets: %d", $time, gen.repeat_count);
+
     $display("%0d : Environment : end of test()", $time);
   endtask
 

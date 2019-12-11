@@ -14,7 +14,7 @@ class scoreboard;
   virtual downstream vif;
 
   // error counter
-  integer scb_errors = 0;
+  integer scb_errors[4] = {0,0,0,0};
 
   //constructor
   function new(virtual downstream vif, mailbox mon2scb[4], mailbox driv2scb[4]);
@@ -32,7 +32,7 @@ class scoreboard;
         driv2scb[trans_mon.addr_out].get(trans_driv);
         end
       else begin
-        scb_errors++;
+        scb_errors[port]++;
       end
 
       no_transactions[port]++;
