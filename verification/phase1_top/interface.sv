@@ -1,7 +1,7 @@
 `ifndef INTERFACE_SV
 `define INTERFACE_SV
 
-interface downstream(input logic clk, rst_b);
+interface downstream(input logic clk, reset);
 
   logic [7:0] addr_in;
   logic [7:0] data_in;
@@ -16,14 +16,14 @@ interface downstream(input logic clk, rst_b);
     output valid_in;
   endclocking
 
-  modport dut(input clk, rst_b,
+  modport dut(input clk, reset,
               input data_in, input addr_in,
               output rcv_rdy,
               input valid_in);
 
 endinterface
 
-interface upstream(input logic clk, rst_b);
+interface upstream(input logic clk, reset);
   logic [7:0] addr_out;
   logic [7:0] data_out;
   logic       valid_out;
@@ -36,7 +36,7 @@ interface upstream(input logic clk, rst_b);
     input valid_out;
   endclocking
 
-  modport dut(input clk, rst_b,
+  modport dut(input clk, reset,
               output data_out, output addr_out,
               input data_rd,
               output valid_out);

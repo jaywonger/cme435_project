@@ -25,7 +25,7 @@ module tbench_top;
   testbench test(input_vif, output_vif);
 
   //DUT instance, interface signals are connected to the DUT ports
-  dut_top dut(i_intf.dut);
+  dut_top dut(.input_vif(input_vif), .output_vif(output_vif));
 
   //enabling the wave dump
   initial begin
