@@ -1,7 +1,7 @@
 `ifndef DRIVER_SV
 `define DRIVER_SV
 
-`include "verification/phase6_monitor/transaction.sv"
+`include "transaction.sv"
 
 class driver;
   //used to count the number of transactions
@@ -26,10 +26,17 @@ class driver;
     transaction trans;
     forever begin
       @vif.cb_down;
-        gen2driv.get(trans);
-        vif.cb_down.valid_in <= 1'b1;
-        vif.cb_down.data_in <= trans.data_in;
-        vif.cb_down.addr_in <= trans.addr_in;
+      gen2driv.get(trans);
+        if(vif.cb_down.rcv_rdy == 1'b1) begin
+          vif.cb_down.valid_in <= 1'b1;
+          vif.cb_down.data_in <= trans.data_in;
+          vif.cb_down.addr_in <= trans.addr_in;
+        end
+        else begin
+          vif.cb_down.valid_in <= 1'b0;
+          vif.cb_down.data_in <= trans.data_in;
+          vif.cb_down.addr_in <= trans.addr_in;
+        end
 
         trans.display("[ Driver ]");
         no_transactions++;

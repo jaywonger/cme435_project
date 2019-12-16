@@ -1,7 +1,7 @@
 `ifndef DRIVER_SV
 `define DRIVER_SV
 
-`include "verification/phase5_driver/transaction.sv"
+`include "transaction.sv"
 
 class driver;
   //used to count the number of transactions

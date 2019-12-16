@@ -1,7 +1,7 @@
 `ifndef MONITOR_SV
 `define MONITOR_SV
 
-`include "verification/phase6_monitor/transaction.sv"
+`include "transaction.sv"
 
 class monitor;
   // class instances
@@ -29,10 +29,11 @@ class monitor;
         trans.data_out = vif.cb_up.data_out;
         trans.addr_out = vif.cb_up.addr_out;
         trans.display("[ Monitor ]");
-        no_transactions++;
       end
-      else
+      else begin
         vif.cb_up.data_rd <= 1'b0;
+      end
+      no_transactions++;
     end
   endtask
 

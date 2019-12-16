@@ -1,7 +1,7 @@
 `ifndef ENVIRONMENT_SV
 `define ENVIRONMENT_SV
 
-`include "verification/phase4_generator/generator.sv"
+`include "generator.sv"
 
 class environment;
 generator gen;

@@ -1,8 +1,8 @@
 `ifndef ENVIRONMENT_SV
 `define ENVIRONMENT_SV
 
-`include "verification/phase5_driver/generator.sv"
-`include "verification/phase5_driver/driver.sv"
+`include "generator.sv"
+`include "driver.sv"
 
 class environment;
   // declaring the classes
@@ -68,10 +68,8 @@ class environment;
       driv[2].main();
       driv[3].main();
     join_none
-    wait(driv[0].no_transactions == gen.repeat_count/4);
-    wait(driv[1].no_transactions == gen.repeat_count/4);
-    wait(driv[2].no_transactions == gen.repeat_count/4);
-    wait(driv[3].no_transactions == gen.repeat_count/4);
+    wait(driv[0].no_transactions + driv[1].no_transactions
+        + driv[2].no_transactions + driv[3].no_transactions == gen.repeat_count);
 
     $display("%0d : Generated Packets: %d", $time, gen.no_transactions);
   //  $display("%0d : Generated Packets Driver: %d", $time, driv.no_transactions);

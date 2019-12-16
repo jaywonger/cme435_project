@@ -1,7 +1,7 @@
 `ifndef GENERATOR_SV
 `define GENERATOR_SV
 
-`include "verification/phase7_scoreboard/transaction.sv"
+`include "transaction.sv"
 
 class generator;
   //declaring transaction class
@@ -27,13 +27,13 @@ class generator;
     trans = new();
     repeat(repeat_count) begin
       if( !trans.randomize() ) $fatal("Gen:: trans randomization failed");
-      no_transactions++;
       driv_trans = new();
       driv_trans.data_in = trans.data_in;
       driv_trans.addr_in = trans.addr_in;
       driv_trans.port_in = trans.port_in;
-      trans.display("[ Generator ]");
+      //trans.display("[ Generator ]");
       gen2driv[driv_trans.port_in].put(driv_trans);
+      no_transactions++;
     end
   endtask
 

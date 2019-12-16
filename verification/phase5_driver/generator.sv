@@ -1,7 +1,7 @@
 `ifndef GENERATOR_SV
 `define GENERATOR_SV
 
-`include "verification/phase5_driver/transaction.sv"
+`include "transaction.sv"
 
 class generator;
   //declaring transaction class

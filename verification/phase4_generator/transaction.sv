@@ -27,8 +27,7 @@ function void display(string name);
   $display("- %s ", name);
   $display("-------------------------");
 
-  $display("- data_in = %d, addr_in = %d, port_in = %d", data_in, addr_in, port_in);
-  $display("data_out = %d, addr_out = %d, port_out = %d", data_out, addr_out, port_out);
+  $display("%0d : data_in = %0d, addr_in = %0d, port_in = %0d", $time, data_in, addr_in, port_in);
 
   $display("");
   $display("-------------------------");

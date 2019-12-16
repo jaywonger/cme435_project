@@ -1,10 +1,10 @@
 `ifndef ENVIRONMENT_SV
 `define ENVIRONMENT_SV
 
-`include "verification/phase7_scoreboard/generator.sv"
-`include "verification/phase7_scoreboard/driver.sv"
-`include "verification/phase7_scoreboard/monitor.sv"
-`include "verification/phase7_scoreboard/scoreboard.sv"
+`include "generator.sv"
+`include "driver.sv"
+`include "monitor.sv"
+`include "scoreboard.sv"
 
 class environment;
   // declaring the classes
@@ -26,15 +26,14 @@ class environment;
     this.output_vif = output_vif;
 
     for (int i=0; i<4; i++) begin
-        gen2driv[i] = new();
-        mon2scb[i] = new();
-        driv2scb[i] = new();
-        driv[i] = new(this.input_vif[i], gen2driv[i], driv2scb[i]);
-        mon[i] = new(this.output_vif[i], i, mon2scb[i]);
-
-        gen = new(gen2driv);
-        scb = new(this.input_vif[i], mon2scb, driv2scb);
+      gen2driv[i] = new();
+      mon2scb[i] = new();
+      driv2scb[i] = new();
+      driv[i] = new(this.input_vif[i], gen2driv[i], driv2scb[i]);
+      mon[i] = new(this.output_vif[i], i, mon2scb[i]);
     end
+    gen = new(gen2driv);
+    scb = new(mon2scb, driv2scb);
   endfunction
 
   task pre_test();
@@ -70,8 +69,7 @@ class environment;
     $display("%0d : Environment : start of test()", $time);
     gen.main();
     wait(gen.no_transactions == gen.repeat_count);
-    $display("%0d : Generator Packets: %d", $time, gen.repeat_count);
-
+    $display("%0d : Generator Packets: %0d", $time, gen.repeat_count);
     fork
       driv[0].main();
       driv[1].main();
@@ -83,21 +81,22 @@ class environment;
       mon[3].main();
       scb.main();
     join_none
-    wait(driv[0].no_transactions == gen.repeat_count/4);
-    wait(driv[1].no_transactions == gen.repeat_count/4);
-    wait(driv[2].no_transactions == gen.repeat_count/4);
-    wait(driv[3].no_transactions == gen.repeat_count/4);
-    $display("%0d : Driver Packets: %d", $time, gen.repeat_count);
 
-    wait(mon[0].no_transactions == gen.repeat_count/4);
-    wait(mon[1].no_transactions == gen.repeat_count/4);
-    wait(mon[2].no_transactions == gen.repeat_count/4);
-    wait(mon[3].no_transactions == gen.repeat_count/4);
-    $display("%0d : Monitor Packets: %d", $time, gen.repeat_count);
+    wait(driv[0].no_transactions + driv[1].no_transactions
+        + driv[2].no_transactions + driv[3].no_transactions == gen.repeat_count);
+    $display("%0d : Driver Packets: %0d", $time, gen.repeat_count);
 
-    // need sum() since its an array
+    // these wait statements break everything since there can be lost packets
+    // need a better way to check
+    wait(mon[0].no_transactions + mon[1].no_transactions
+        + mon[2].no_transactions + mon[3].no_transactions == gen.repeat_count);
+    $display("%0d : Monitor Packets: %0d", $time, gen.repeat_count);
+
+    //$display("%0d : scb no transactions: %d", $time, scb.no_transactions.sum());
+    //$display("%0d : scb errors: %d", $time, scb.no_transactions.sum());
+    //$display("%0d : scb packet: %d", $time, gen.repeat_count);
     wait(scb.no_transactions.sum() + scb.scb_errors.sum() == gen.repeat_count);
-    $display("%0d : Scoreboard Packets: %d", $time, gen.repeat_count);
+    $display("%0d : Scoreboard Packets: %0d", $time, gen.repeat_count);
 
     $display("%0d : Environment : end of test()", $time);
   endtask

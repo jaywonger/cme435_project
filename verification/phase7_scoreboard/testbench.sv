@@ -1,7 +1,7 @@
 `ifndef TESTBENCH_SV
 `define TESTBENCH_SV
 
-`include "verification/phase7_scoreboard/environment.sv"
+`include "environment.sv"
 
 program automatic testbench(downstream.driver input_vif[4], upstream.monitor output_vif[4]);
   //declaring environment instance
@@ -12,7 +12,7 @@ program automatic testbench(downstream.driver input_vif[4], upstream.monitor out
     env = new(input_vif, output_vif);
 
     // setting the repeat count of generator such as 5, means to generate 5 packets
-    env.gen.repeat_count = 5;
+    env.gen.repeat_count = 8;
 
     $display("******************* Start of testcase ****************");
     env.run();

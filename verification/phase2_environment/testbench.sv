@@ -1,7 +1,7 @@
 `ifndef TESTBENCH_SV
 `define TESTBENCH_SV
 
-`include "verification/phase2_environment/environment.sv"
+`include "environment.sv"
 
 program automatic testbench(downstream.driver input_vif[4], upstream.monitor output_vif[4]);
   //declaring environment instance

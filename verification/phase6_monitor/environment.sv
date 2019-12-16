@@ -1,9 +1,9 @@
 `ifndef ENVIRONMENT_SV
 `define ENVIRONMENT_SV
 
-`include "verification/phase6_monitor/generator.sv"
-`include "verification/phase6_monitor/driver.sv"
-`include "verification/phase6_monitor/monitor.sv"
+`include "generator.sv"
+`include "driver.sv"
+`include "monitor.sv"
 
 class environment;
   // declaring the classes
@@ -76,18 +76,16 @@ class environment;
       mon[2].main();
       mon[3].main();
     join_none
-    // repeat_count/4 since there are 4 drivers and 4 monitors
-    wait(driv[0].no_transactions == gen.repeat_count/4);
-    wait(driv[1].no_transactions == gen.repeat_count/4);
-    wait(driv[2].no_transactions == gen.repeat_count/4);
-    wait(driv[3].no_transactions == gen.repeat_count/4);
-    $display("%0d : Driver Packets: %d", $time, gen.repeat_count);
+    wait(driv[0].no_transactions + driv[1].no_transactions
+        + driv[2].no_transactions + driv[3].no_transactions == gen.repeat_count);
 
-    wait(mon[0].no_transactions == gen.repeat_count/4);
-    wait(mon[1].no_transactions == gen.repeat_count/4);
-    wait(mon[2].no_transactions == gen.repeat_count/4);
-    wait(mon[3].no_transactions == gen.repeat_count/4);
-    $display("%0d : Monitor Packets: %d", $time, gen.repeat_count);
+    //$display("%0d : mon[0] : ", $time, mon[0].no_transactions);
+    //$display("%0d : mon[1] : ", $time, mon[1].no_transactions);
+    //$display("%0d : mon[2] : ", $time, mon[2].no_transactions);
+    //$display("%0d : mon[3] : ", $time, mon[3].no_transactions);
+    //$display("%0d : Mon packets: %d", $time, gen.repeat_count);
+    wait(mon[0].no_transactions + mon[1].no_transactions
+        + mon[2].no_transactions + mon[3].no_transactions == gen.repeat_count);
 
   //  $display("%0d : Generated Packets Driver: %d", $time, driv.no_transactions);
     $display("%0d : Environment : end of test()", $time);
