@@ -1,8 +1,8 @@
 `ifndef GENERATOR_SV
 `define GENERATOR_SV
 
-`include "verification/phase8_coverage/transaction.sv"
-`include "verification/phase8_coverage/coverage.sv"
+`include "transaction.sv"
+`include "coverage.sv"
 
 class generator;
   //declaring transaction class
@@ -37,7 +37,7 @@ class generator;
       driv_trans.data_in = trans.data_in;
       driv_trans.addr_in = trans.addr_in;
       driv_trans.port_in = trans.port_in;
-      trans.display("[ Generator ]");
+      //trans.display("[ Generator ]");
       gen2driv[driv_trans.port_in].put(driv_trans);
       cov.sample_trans(driv_trans);
     end

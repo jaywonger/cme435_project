@@ -1,7 +1,7 @@
 `ifndef MONITOR_SV
 `define MONITOR_SV
 
-`include "verification/phase8_coverage/transaction.sv"
+`include "transaction.sv"
 
 class monitor;
   // class instances
@@ -32,12 +32,13 @@ class monitor;
         trans.port_out = port;
         trans.data_out = vif.cb_up.data_out;
         trans.addr_out = vif.cb_up.addr_out;
-        trans.display("[ Monitor ]");
+        //trans.display("[ Monitor ]");
         mon2scb.put(trans);
-        no_transactions++;
       end
-      else
+      else begin
         vif.cb_up.data_rd <= 1'b0;
+      end
+      no_transactions++;
     end
   endtask
 

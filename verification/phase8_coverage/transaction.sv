@@ -10,6 +10,7 @@ randc bit [7:0] port_in;
 bit [7:0] data_out;
 bit [7:0] addr_out;
 bit [7:0] port_out;
+bit valid_in;
 
 /*------------Constraints------------*/
 // address 0 to 3
