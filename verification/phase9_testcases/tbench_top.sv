@@ -27,6 +27,8 @@ module tbench_top;
   //DUT instance, interface signals are connected to the DUT ports
   dut_top dut(.input_vif(input_vif), .output_vif(output_vif));
 
+  //bind dut_top assertions ass(.input_vif(input_vif), .output_vif(output_vif));
+
   //enabling the wave dump
   initial begin
   $dumpfile("dump.vcd"); $dumpvars;

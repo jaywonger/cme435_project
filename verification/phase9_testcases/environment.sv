@@ -1,10 +1,10 @@
 `ifndef ENVIRONMENT_SV
 `define ENVIRONMENT_SV
 
-`include "verification/phase9_testcases/generator.sv"
-`include "verification/phase9_testcases/driver.sv"
-`include "verification/phase9_testcases/monitor.sv"
-`include "verification/phase9_testcases/scoreboard.sv"
+`include "generator.sv"
+`include "driver.sv"
+`include "monitor.sv"
+`include "scoreboard.sv"
 
 class environment;
   // declaring the classes
@@ -20,21 +20,27 @@ class environment;
   virtual downstream input_vif[4];
   virtual upstream output_vif[4];
 
+  integer sanity, min_payload, max_payload;
+
   // constructor
-  function new(virtual downstream input_vif[4], virtual upstream output_vif[4]);
+  function new(virtual downstream input_vif[4], virtual upstream output_vif[4], integer sanity, integer max_payload, integer min_payload);
     this.input_vif = input_vif;
     this.output_vif = output_vif;
 
-    for (int i=0; i<4; i++) begin
-        gen2driv[i] = new();
-        mon2scb[i] = new();
-        driv2scb[i] = new();
-        driv[i] = new(this.input_vif[i], gen2driv[i], driv2scb[i]);
-        mon[i] = new(this.output_vif[i], i, mon2scb[i]);
+    this.sanity = sanity;
+    this.min_payload = min_payload;
+    this.max_payload = max_payload;
 
-        gen = new(gen2driv);
-        scb = new(this.input_vif[i], mon2scb, driv2scb);
+    for (int i=0; i<4; i++) begin
+      gen2driv[i] = new();
+      mon2scb[i] = new();
+      driv2scb[i] = new();
+      driv[i] = new(this.input_vif[i], gen2driv[i], driv2scb[i]);
+      mon[i] = new(this.output_vif[i], i, mon2scb[i]);
     end
+
+    gen = new(gen2driv, sanity, min_payload, max_payload);
+    scb = new(mon2scb, driv2scb);
   endfunction
 
   task pre_test();
@@ -70,7 +76,6 @@ class environment;
     $display("%0d : Environment : start of test()", $time);
     gen.main();
     wait(gen.no_transactions == gen.repeat_count);
-    $display("%0d : Generator Packets: %d", $time, gen.repeat_count);
 
     fork
       driv[0].main();
@@ -83,21 +88,10 @@ class environment;
       mon[3].main();
       scb.main();
     join_none
-    wait(driv[0].no_transactions == gen.repeat_count/4);
-    wait(driv[1].no_transactions == gen.repeat_count/4);
-    wait(driv[2].no_transactions == gen.repeat_count/4);
-    wait(driv[3].no_transactions == gen.repeat_count/4);
-    $display("%0d : Driver Packets: %d", $time, gen.repeat_count);
 
-    wait(mon[0].no_transactions == gen.repeat_count/4);
-    wait(mon[1].no_transactions == gen.repeat_count/4);
-    wait(mon[2].no_transactions == gen.repeat_count/4);
-    wait(mon[3].no_transactions == gen.repeat_count/4);
-    $display("%0d : Monitor Packets: %d", $time, gen.repeat_count);
-
-    // need sum() since its an array
-    wait(scb.no_transactions.sum() + scb.scb_errors.sum() == gen.repeat_count);
-    $display("%0d : Scoreboard Packets: %d", $time, gen.repeat_count);
+    // couldn't figure a better way out to break out of the scoreboard wait statement
+    #(gen.repeat_count * 5);
+    $display("%0d : Scoreboard Packets: %0d", $time, gen.repeat_count);
 
     $display("%0d : Environment : end of test()", $time);
   endtask

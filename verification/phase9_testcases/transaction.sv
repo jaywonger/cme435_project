@@ -10,17 +10,30 @@ randc bit [7:0] port_in;
 bit [7:0] data_out;
 bit [7:0] addr_out;
 bit [7:0] port_out;
+bit valid_in;
 
 /*------------Constraints------------*/
-// address 0 to 3
+// address 0 to 3 coming out
 constraint addr_in_rand {
   soft addr_in inside {[0:3]};
 }
 
-// ports 0 to 3
+// ports 0 to 3 going in
 constraint port_in_rand {
   soft port_in inside {[0:3]};
 }
+
+//data sizing
+constraint data_size_max {
+  data_in inside {255};
+}
+constraint data_size_min {
+  data_in inside {0};
+}
+constraint data_size_all {
+  data_in inside {[0:255]};
+}
+
 /*-----------------------------------*/
 
 function void display(string name);
