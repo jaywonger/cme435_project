@@ -26,20 +26,9 @@ else
   foreach testcase ($list)
     set testcase_uc = `echo $testcase | tr "[:lower:]" "[:upper:]"`
 
-  		vlog +cover +acc ../../dut/xswitch.svp
-  		vlog +cover +acc ../../dut/dut_top.sv
-  		vlog +cover +acc interface.sv
-  		vlog +cover +acc testbench.sv
-  		vlog +cover +acc tbench_top.sv
-  		vlog +cover +acc transaction.sv
-  		vlog +cover +acc generator.sv
-  		vlog +cover +acc driver.sv
-  		vlog +cover +acc monitor.sv
-  		vlog +cover +acc environment.sv
-  		vlog +cover +acc scoreboard.sv
-  		vlog +cover +acc coverage.sv
-
-  	 vsim -coverage -vopt tbench_top -c -do "coverage save -onexit ../../results/phase8_coverage/$testcase.ucdb;run -all; exit"
+		vlog +cover +acc ../../dut/xswitch.svp ../../dut/dut_top.sv scoreboard.sv environment.sv generator.sv interface.sv tbench_top.sv testbench.sv transaction.sv driver.sv monitor.sv
+		
+  	vsim -coverage -vopt tbench_top -c -do "coverage save -onexit ../../results/phase8_coverage/$testcase.ucdb;run -all; exit"
   end
   cd ../../results/phase8_coverage/
   vcover merge -64 test_all.ucdb *.ucdb
