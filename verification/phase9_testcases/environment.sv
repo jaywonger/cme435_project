@@ -90,7 +90,7 @@ class environment;
     join_none
 
     // couldn't figure a better way out to break out of the scoreboard wait statement
-    #(gen.repeat_count * 5);
+    #(gen.repeat_count * 3);
     $display("%0d : Scoreboard Packets: %0d", $time, gen.repeat_count);
 
     $display("%0d : Environment : end of test()", $time);

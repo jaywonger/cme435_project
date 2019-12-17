@@ -24,7 +24,13 @@ class scoreboard;
     transaction trans_mon, trans_driv;
     forever begin
       mon2scb[port].get(trans_mon);
-      driv2scb[trans_mon.addr_out].get(trans_driv);
+      if(driv2scb[trans_mon.addr_out].num() > 0) begin
+        driv2scb[trans_mon.addr_out].get(trans_driv);
+      end
+      else begin
+        scb_errors[port]++;
+      end
+
       if(trans_mon.port_out != trans_driv.addr_in) begin
         $display("%0d : monitor and driver port not the same, Driver: %0d, Monitor: %0d \n", $time, trans_driv.addr_in, trans_mon.port_out);
         scb_errors[port]++;

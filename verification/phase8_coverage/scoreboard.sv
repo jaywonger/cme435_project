@@ -25,10 +25,17 @@ class scoreboard;
     forever begin
       mon2scb[port].get(trans_mon);
       driv2scb[trans_mon.addr_out].get(trans_driv);
-      scb_errors[port]++;
+      if(trans_mon.port_out != trans_driv.addr_in) begin
+        $display("%0d : monitor and driver port not the same, Driver: %0d, Monitor: %0d \n", $time, trans_driv.addr_in, trans_mon.port_out);
+        scb_errors[port]++;
+      end
+      if(trans_driv.data_in != trans_mon.data_out) begin
+        $display("%0d : data in from driver does not match that received by monitor, Driver: %0d, Monitor: %0d\n", $time, trans_driv.data_in, trans_mon.data_out);
+        scb_errors[port]++;
+      end
       no_transactions[port]++;
-      trans_driv.display("[ Scoreboard - Driver ]");
-      trans_mon.display("[ Scoreboard - Monitor ]");
+      //trans_driv.display("[ Scoreboard - Driver ]");
+      //trans_mon.display("[ Scoreboard - Monitor ]");
     end
   endtask
 

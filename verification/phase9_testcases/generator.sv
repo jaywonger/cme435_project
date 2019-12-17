@@ -36,8 +36,7 @@ class generator;
   task sanity_check();
     if(sanity) begin
       trans.addr_in_rand.constraint_mode(1);
-      trans.port_in_rand.constraint_mode(0);
-      trans.data_size_all.constraint_mode(1);
+      trans.port_in_rand.constraint_mode(1);
     end
     else if (max_payload) begin
       trans.data_size_max.constraint_mode(1);
@@ -46,10 +45,6 @@ class generator;
     else if (min_payload) begin
       trans.data_size_max.constraint_mode(0);
       trans.data_size_min.constraint_mode(1);
-    end
-    else if(sanity || max_payload || min_payload) begin
-      trans.addr_in_rand.constraint_mode(1);
-      trans.port_in_rand.constraint_mode(0);
     end
   endtask
 

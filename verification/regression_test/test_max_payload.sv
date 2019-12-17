@@ -25,7 +25,7 @@ program automatic testbench(downstream.driver input_vif[4], upstream.monitor out
     env.gen.repeat_count = 900;
 
     $display("******************* Start of testcase ****************");
-    //$root.tbench_top.dut.dut.enable_dut_bugs(11200941);
+    $root.tbench_top.dut.dut.enable_dut_bugs(11200941);
 
     env.run();
   end

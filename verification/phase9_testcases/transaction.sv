@@ -25,15 +25,11 @@ constraint port_in_rand {
 
 //data sizing
 constraint data_size_max {
-  data_in inside {255};
+  soft data_in inside {255};
 }
 constraint data_size_min {
-  data_in inside {0};
+  soft data_in inside {0};
 }
-constraint data_size_all {
-  data_in inside {[0:255]};
-}
-
 /*-----------------------------------*/
 
 function void display(string name);
